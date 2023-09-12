@@ -17,6 +17,16 @@ it('prevents unauthenticated users from accessing any CRUD routes', function () 
     $this->delete('/units/1', [])->assertRedirect('/login');
 });
 
+it('validates that the name field is required on store', function () {
+    $this->actingAs($this->user)
+        ->post(route('units.store'), [
+            'name' => '',
+            'symbol' => 'TU',
+        ])
+        ->assertSessionHasErrors('name');
+});
+
+
 it('creates a new unit', function () {
     $this->actingAs($this->user)
         ->post(route('units.store'), [
@@ -57,4 +67,13 @@ it('deletes an existing unit', function () {
     $this->assertDatabaseMissing('units', [
         'id' => $unit->id,
     ]);
+});
+
+it('lists paginated units', function () {
+    Unit::factory()->count(12)->create();
+
+    $this->actingAs($this->user)
+        ->get(route('units.index'))
+        ->assertPropCount('units.data', 10)
+        ->assertPropValue('units.total', 12);
 });
