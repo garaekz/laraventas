@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Unit\SaveUnitAction;
+use App\Filters\SearchFilter;
 use App\Http\Requests\Unit\StoreUnitRequest;
 use App\Http\Requests\Unit\UpdateUnitRequest;
 use App\Models\Unit;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class UnitController extends Controller
 {
@@ -14,7 +17,17 @@ class UnitController extends Controller
      */
     public function index()
     {
-        //
+        $data = QueryBuilder::for(Unit::class)
+            ->allowedFilters(
+                AllowedFilter::custom('search', new SearchFilter(), 'name,symbol'),
+            )
+            ->allowedSorts(['name', 'symbol'])
+            ->allowedFields(['name', 'symbol'])
+            ->paginate(30);
+
+        return inertia('Unit/Index', [
+            'list' => $data,
+        ]);
     }
 
     /**
