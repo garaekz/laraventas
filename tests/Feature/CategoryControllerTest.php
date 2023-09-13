@@ -76,7 +76,7 @@ it('lists paginated categories', function () {
                 'list.data',
                 30,
                 fn (Assert $page) => $page
-                ->hasAll(['id', 'name', 'symbol', 'status'])
+                ->hasAll(['id', 'name', 'status'])
                 ->etc()
             )
         );
@@ -94,7 +94,7 @@ it('lists paginated categories filtered by a search term', function () {
                 'list.data',
                 1,
                 fn (Assert $page) => $page
-                ->hasAll(['id', 'name', 'symbol', 'status'])
+                ->hasAll(['id', 'name', 'status'])
                 ->etc()
                 ->where('id', $category->id)
             )
