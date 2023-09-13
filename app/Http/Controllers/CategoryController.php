@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\SearchFilter;
 use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class CategoryController extends Controller
 {
@@ -13,7 +16,17 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $data = QueryBuilder::for(Category::class)
+            ->allowedFilters(
+                AllowedFilter::custom('search', new SearchFilter(), 'name'),
+            )
+            ->allowedSorts(['name'])
+            ->allowedFields(['name'])
+            ->paginate(30);
+
+        return inertia('Category/Index', [
+            'list' => $data,
+        ]);
     }
 
     /**
