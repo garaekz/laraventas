@@ -36,6 +36,10 @@ const columns = [
         label: 'Símbolo',
     },
     {
+        key: 'status',
+        label: 'Status',
+    },
+    {
         key: 'created_at',
         label: 'Fecha de creación',
     },
@@ -75,9 +79,14 @@ const onPageChange = (query) => {
                 </span>
             </div>
         </template>
-        <template #color="{ item }">
-            <span class="rounded px-2 py-1 text-white" :style="`background: ${item.color}`">
-                {{ item.color }}
+        <template #status="{ item }">
+            <span 
+                :class="{
+                    'bg-green-100 text-green-800': item.status,
+                    'bg-red-100 text-red-800': !item.status,
+                }"
+                class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-non rounded-lg">
+                {{ item.status ? 'Activo' : 'Inactivo' }}
             </span>
         </template>
         <template #created_at="{ item }">

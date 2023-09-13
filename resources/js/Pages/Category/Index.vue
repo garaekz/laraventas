@@ -32,10 +32,8 @@ const onEdit = (model) => {
 
     form.id = model.id;
     form.name = model.name;
-    form.symbol = model.symbol;
-    form.status = model.status;
+    form.status = Boolean(model.status);
 };
-
 
 const handleDialogClose = () => {
     formDialog.value.visible = false;
@@ -47,7 +45,7 @@ const handleDialogClose = () => {
 const form = useForm({
     id: null,
     name: null,
-    symbol: null,
+    status: true,
 });
 
 const formSuccess = (message) => {
@@ -62,13 +60,13 @@ const formError = (message) => {
 
 const submitForm = () => {
     if (form.id) {
-        form.put(route('units.update', form.id), {
+        form.put(route('categories.update', form.id), {
             preserveScroll: true,
             onSuccess: () => formSuccess('La categoría se actualizó correctamente!'),
             onError: () => formError('Se produjo un error al actualizar la categoría.'),
         });
     } else {
-        form.post(route('units.store'), {
+        form.post(route('categories.store'), {
             preserveScroll: true,
             onSuccess: () => formSuccess('La categoría se creó correctamente!'),
             onError: () => formError('Se produjo un error al crear la categoría.'),
@@ -84,7 +82,7 @@ const confirmDelete = async (id) => {
     });
 
     if (ok) {
-        form.delete(route('units.destroy', id), {
+        form.delete(route('categories.destroy', id), {
             preserveScroll: true,
             onSuccess: () => formSuccess('La categoría se eliminó correctamente!'),
             onError: () => formError('Un error ocurrió mientras se eliminaba la categoría.'),
@@ -97,17 +95,28 @@ const confirmDelete = async (id) => {
     <ConfirmationModal ref="confirm" />
     <FormDialog :isOpen="formDialog.visible" :title="formDialog.title" @close="handleDialogClose" @save="submitForm">
         <form @submit.prevent="submitForm" class="space-y-4">
-                <div>
-                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        Nombre de la categoría
-                    </label>
-                    <input type="text" id="name" v-model="form.name"
-                        placeholder="Ejemplo: Dragon Ball, TCG, Model Kits, etc."
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        required>
-                    <InputError class="mt-2" :message="form.errors.name" />
-                </div>
-            </form>
+            <div>
+                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Nombre de la categoría
+                </label>
+                <input type="text" id="name" v-model="form.name" placeholder="Ejemplo: Dragon Ball, TCG, Model Kits, etc."
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    required>
+                <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+            <div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input v-model="form.status" type="checkbox" class="sr-only peer">
+                    <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                    </div>
+                    <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        {{ form.status ? 'Activo' : 'Inactivo' }}
+                    </span>
+                </label>
+                <InputError class="mt-2" :message="form.errors.status" />
+            </div>
+        </form>
     </FormDialog>
     <AdminLayout title="Categorías">
         <template #header>
