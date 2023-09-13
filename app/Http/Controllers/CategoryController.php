@@ -21,7 +21,7 @@ class CategoryController extends Controller
             ->allowedFilters(
                 AllowedFilter::custom('search', new SearchFilter(), 'name'),
             )
-            ->allowedSorts(['name'])
+            ->allowedSorts(['id, name, created_at'])
             ->allowedFields(['name'])
             ->paginate(30);
 
