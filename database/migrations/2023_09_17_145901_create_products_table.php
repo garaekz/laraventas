@@ -25,6 +25,7 @@ return new class () extends Migration {
             $table->string('image')->nullable();
             $table->foreignIdFor(Brand::class)->nullable()->constrained();
             $table->foreignIdFor(Unit::class)->constrained();
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
 

@@ -26,6 +26,7 @@ class ProductFactory extends Factory
             'image' => $this->faker->imageUrl(),
             'brand_id' => BrandFactory::new(),
             'unit_id' => UnitFactory::new(),
+            'status' => $this->faker->boolean(),
         ];
     }
 }
