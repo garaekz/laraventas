@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Brand\SaveBrandAction;
+use App\Filters\SearchFilter;
 use App\Models\Brand;
 use App\Http\Requests\StoreBrandRequest;
 use App\Http\Requests\UpdateBrandRequest;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class BrandController extends Controller
 {
@@ -13,47 +17,37 @@ class BrandController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $data = QueryBuilder::for(Brand::class)
+            ->allowedFilters(
+                AllowedFilter::custom('search', new SearchFilter(), 'name'),
+            )
+            ->allowedSorts(['id, name, created_at'])
+            ->allowedFields(['name'])
+            ->paginate(30);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return inertia('Brand/Index', [
+            'list' => $data,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBrandRequest $request)
+    public function store(StoreBrandRequest $request, SaveBrandAction $action)
     {
-        //
-    }
+        $action->execute(new Brand(), $request->validated());
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Brand $brand)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Brand $brand)
-    {
-        //
+        return redirect()->route('brands.index');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBrandRequest $request, Brand $brand)
+    public function update(UpdateBrandRequest $request, Brand $brand, SaveBrandAction $action)
     {
-        //
+        $action->execute($brand, $request->validated());
+
+        return redirect()->route('brands.index');
     }
 
     /**
@@ -61,6 +55,8 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        //
+        $brand->delete();
+
+        return redirect()->route('brands.index');
     }
 }

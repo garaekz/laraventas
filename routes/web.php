@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Foundation\Application;
@@ -35,6 +36,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::resource('brands', BrandController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('units', UnitController::class);
 });
