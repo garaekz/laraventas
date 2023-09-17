@@ -101,7 +101,9 @@ const handleSearch = createDebounce((event: Event) => {
       </div>
     </div>
     <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <table
+        v-if="data.total"
+        class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" class="px-4 py-3" v-for="column in columns" :key="column.key">{{ column.label }}</th>
@@ -130,8 +132,15 @@ const handleSearch = createDebounce((event: Event) => {
           </tr>
         </tbody>
       </table>
+      <div v-else class="flex flex-col gap-1 items-center justify-center py-10 text-gray-500 dark:text-gray-400 text-xl">
+        No hay resultados
+        <span class="text-base text-gray-400 dark:text-gray-500">
+          Intenta con otra búsqueda o crea un nuevo registro.
+        </span>
+      </div>
     </div>
     <Paginator
+      v-if="data.total"
       :currentPage="data.current_page"
       :totalItems="data.total"
       :perPage="data.per_page"
