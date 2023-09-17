@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { computed } from 'vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import {
     TransitionRoot,
@@ -9,9 +9,13 @@ import {
     DialogTitle,
 } from '@headlessui/vue'
 
-defineProps({
+const props = defineProps({
     isOpen: Boolean,
     title: String,
+    size: {
+        type: String,
+        default: '2xl',
+    },
     okButton: {
         type: String,
         default: 'Guardar',
@@ -27,6 +31,18 @@ defineProps({
 })
 
 const emit = defineEmits(['close', 'save'])
+
+const sizeClass = computed(() => {
+    return {
+        'sm': 'sm:max-w-sm',
+        'md': 'sm:max-w-md',
+        'lg': 'sm:max-w-lg',
+        'xl': 'sm:max-w-xl',
+        '2xl': 'sm:max-w-2xl',
+        '3xl': 'sm:max-w-3xl',
+        '4xl': 'sm:max-w-4xl',
+    }[props.size];
+});
 </script>
 <template>
     <TransitionRoot appear :show="isOpen" as="template">
@@ -42,7 +58,8 @@ const emit = defineEmits(['close', 'save'])
                         enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
                         leave-to="opacity-0 scale-95">
                         <DialogPanel
-                            class="w-full max-w-md transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 text-left align-middle shadow-xl transition-all">
+                            :class="sizeClass"
+                            class="w-full transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 text-left align-middle shadow-xl transition-all">
                             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-500 dark:text-gray-300">
                                 <h4 id="drawer-label"
                                     class="mb-1.5 leading-none text-xl font-semibold text-gray-900 dark:text-white">
