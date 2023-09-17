@@ -35,6 +35,7 @@ class BrandController extends Controller
      */
     public function store(StoreBrandRequest $request, SaveBrandAction $action)
     {
+        // TODO: Implement file upload before saving
         $action->execute(new Brand(), $request->validated());
 
         return redirect()->route('brands.index');

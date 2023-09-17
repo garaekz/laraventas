@@ -32,10 +32,6 @@ const columns = [
         label: 'Nombre',
     },
     {
-        key: 'status',
-        label: 'Status',
-    },
-    {
         key: 'created_at',
         label: 'Fecha de creación',
     },
@@ -70,20 +66,7 @@ const onPageChange = (query) => {
                 <span class="text-lg font-medium text-gray-900 dark:text-white">
                     {{ item.name }}
                 </span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ item.slug }}
-                </span>
             </div>
-        </template>
-        <template #status="{ item }">
-            <span 
-                :class="{
-                    'bg-green-100 text-green-800': item.status,
-                    'bg-red-100 text-red-800': !item.status,
-                }"
-                class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-non rounded-lg">
-                {{ item.status ? 'Activo' : 'Inactivo' }}
-            </span>
         </template>
         <template #created_at="{ item }">
             {{ dateFormat(item.created_at) }}

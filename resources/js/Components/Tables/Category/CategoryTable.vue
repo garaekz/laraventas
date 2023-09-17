@@ -70,9 +70,6 @@ const onPageChange = (query) => {
                 <span class="text-lg font-medium text-gray-900 dark:text-white">
                     {{ item.name }}
                 </span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ item.slug }}
-                </span>
             </div>
         </template>
         <template #status="{ item }">
