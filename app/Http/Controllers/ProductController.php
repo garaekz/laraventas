@@ -9,6 +9,8 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Brand;
 use App\Models\Unit;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -47,10 +49,31 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request, SaveProductAction $action)
     {
-        $product = $action->execute(new Product(), $request->validated());
+        try {
+            $data = $request->validated();
 
-        return redirect()->route('products.index')
-            ->with('success', "Product {$product->name} created successfully.");
+            DB::beginTransaction();
+
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->file('image')->store('products');
+            }
+
+            $product = $action->execute(new Product(), $data);
+
+            DB::commit();
+
+            return redirect()->route('products.index')
+                ->with('success', "Product {$product->name} created successfully.");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            // Delete image if exist
+            if (isset($data['image'])) {
+                Storage::delete($data['image']);
+            }
+
+            return back()->with('error', $th->getMessage());
+        }
     }
 
     /**
