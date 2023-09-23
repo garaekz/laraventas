@@ -29,7 +29,7 @@ class StoreProductRequest extends FormRequest
             'brand' =>  ['nullable', 'integer', 'exists:brands,id'],
             'min_stock' =>  ['nullable', 'integer'],
             'notes' =>  ['nullable', 'string'],
-            'image' =>  ['nullable', 'string'],
+            'image' =>  ['nullable', 'image', 'max:4096'],
             'status' =>  ['required', 'boolean'],
         ];
     }

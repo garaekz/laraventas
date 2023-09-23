@@ -135,9 +135,8 @@ const removeImage = () => {
     <FormDialog :isOpen="formDialog.visible" :title="formDialog.title" @close="handleDialogClose" @save="submitForm"
         size="4xl">
         <form @submit.prevent="submitForm" class="space-y-4">
-
             <div class="flex flex-col sm:flex-row gap-4">
-                <div class="flex items-center justify-start w-full">
+                <div class="flex flex-col items-center justify-start w-full">
                     <div v-if="form.imagePreview" class="flex">
                         <div class="relative w-48 h-48">
                             <div class="rounded-lg overflow-hidden w-full h-full">
@@ -171,6 +170,7 @@ const removeImage = () => {
                             <input @change="handleFileDrop" ref="imageFile" type="file" class="hidden" />
                         </label>
                     </div>
+                    <InputError class="mt-2" :message="form.errors.image" />
                 </div>
                 <div class="w-full flex flex-col gap-4">
                     <div class="w-full">
@@ -277,7 +277,6 @@ const removeImage = () => {
         </template>
 
         <section class="mx-auto max-w-screen-xl">
-            {{ list }}
             <ProductTable :data="list" @table:creating="onCreate" @table:updating="onEdit"
                 @table:deleting="confirmDelete" />
         </section>
