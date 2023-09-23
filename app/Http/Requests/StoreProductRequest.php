@@ -31,6 +31,8 @@ class StoreProductRequest extends FormRequest
             'notes' =>  ['nullable', 'string'],
             'image' =>  ['nullable', 'image', 'max:4096'],
             'status' =>  ['required', 'boolean'],
+            'categories' =>  ['nullable', 'array'],
+            'categories.*' =>  ['nullable', 'integer', 'exists:categories,id'],
         ];
     }
 }

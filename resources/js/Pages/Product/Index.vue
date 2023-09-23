@@ -42,6 +42,14 @@ const onEdit = (model) => {
     form.name = model.name;
     form.status = Boolean(model.status);
     form.imagePreview = model.image_url;
+    form.brand = model.brand_id;
+    form.unit = model.unit_id;
+    form.price = model.price;
+    form.code = model.code;
+    form.min_stock = model.min_stock;
+    form.notes = model.notes;
+
+    form.clearErrors();
 };
 
 const handleDialogClose = () => {
@@ -53,6 +61,7 @@ const handleDialogClose = () => {
 
 const form = useForm({
     id: null,
+    _method: 'post',
     name: "",
     status: true,
     price: null,
@@ -74,7 +83,9 @@ const formError = (message) => {
 
 const submitForm = () => {
     if (form.id) {
-        form.put(route('products.update', form.id), {
+        form._method = 'put';
+        form.post(route('products.update', form.id), {
+            forceFormData: true,
             preserveScroll: true,
             onSuccess: () => formSuccess('El producto se actualizó correctamente!'),
             onError: () => formError('Se produjo un error al actualizar el producto.'),

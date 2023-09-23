@@ -96,9 +96,38 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product, SaveProductAction $action)
     {
-        //
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::delete($product->image);
+            }
+
+            $data['image'] = $request->file('image')->store('products');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $product = $action->execute($product, $data);
+
+            DB::commit();
+
+            return redirect()->route('products.index')
+                ->withSuccess("Product {$product->name} updated successfully.");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            if (isset($data['image'])) {
+                Storage::delete($data['image']);
+            }
+
+            Log::error($th->getMessage());
+
+            return back()->withError($th->getMessage());
+        }
     }
 
     /**
